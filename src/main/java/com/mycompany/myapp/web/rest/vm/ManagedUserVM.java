@@ -4,8 +4,10 @@ import java.time.ZonedDateTime;
 
 import java.util.Set;
 
+import com.mycompany.myapp.domain.Country;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.service.dto.UserDTO;
+
 import javax.validation.constraints.Size;
 
 /**
@@ -43,9 +45,9 @@ public class ManagedUserVM extends UserDTO {
     }
 
     public ManagedUserVM(Long id, String login, String password, String firstName, String lastName,
-                         String email, boolean activated, String langKey, Set<String> authorities,
+                         String email, boolean activated, String langKey, Set<String> authorities, Country country,
                          String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate) {
-        super(login, firstName, lastName, email, activated, langKey, authorities);
+        super(login, firstName, lastName, email, activated, langKey, authorities, country);
         this.id = id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
