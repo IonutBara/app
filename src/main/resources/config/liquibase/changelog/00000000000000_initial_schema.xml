@@ -158,4 +158,15 @@
                                  referencedTableName="jhi_persistent_audit_event"/>
     </changeSet>
 
+    <changeSet id="createTableCountry" author="Ionut">
+        <createTable tableName="country">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable >
+    </changeSet>
+
 </databaseChangeLog>
