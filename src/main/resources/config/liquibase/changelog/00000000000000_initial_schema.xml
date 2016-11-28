@@ -33,7 +33,7 @@
                 <constraints unique="true" nullable="true"/>
             </column>
             <column name="activated" type="boolean" valueBoolean="false">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="lang_key" type="varchar(5)"/>
             <column name="activation_key" type="varchar(20)"/>
@@ -74,7 +74,7 @@
             </column>
             <column name="user_id" type="bigint"/>
             <column name="token_value" type="varchar(76)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="token_date" type="date"/>
             <column name="ip_address" type="varchar(39)"/>
@@ -121,7 +121,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="principal" type="varchar(50)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="event_date" type="timestamp"/>
             <column name="event_type" type="varchar(255)"/>
@@ -166,7 +166,18 @@
             <column name="name" type="varchar(50)">
                 <constraints unique="true" nullable="false"/>
             </column>
-        </createTable >
+        </createTable>
+    </changeSet>
+
+    <changeSet id="addColumnCountryIdInUserTable" author="Ionut">
+        <addColumn tableName="jhi_user">
+            <column name="country_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="jhi_user"
+                                 baseColumnNames="country_id"
+                                 constraintName="fk_country_id"
+                                 referencedTableName="country"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>
