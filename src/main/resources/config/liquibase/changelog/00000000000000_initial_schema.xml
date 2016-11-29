@@ -180,4 +180,26 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="createTableAddress" author="Ionut">
+        <createTable tableName="address">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="city" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zipCode" type="varchar(8)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="country_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="address"
+                                 baseColumnNames="country_id"
+                                 constraintName="fki_country_id"
+                                 referencedTableName="country"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
