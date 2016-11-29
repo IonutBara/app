@@ -1,8 +1,10 @@
 package com.mycompany.myapp.repository;
 
+import com.mycompany.myapp.domain.Country;
 import com.mycompany.myapp.domain.User;
 
 import java.time.ZonedDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +35,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Override
     void delete(User t);
 
+    @Query(value = "select user from User user INNER JOIN user.country country WHERE country.name=?1")
+    List<User> findAllByCountry(String countryName);
+
+/*  SELECT c
+    FROM Customer c INNER JOIN c.orders o
+    WHERE c.status = 1*/
 }
