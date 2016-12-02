@@ -1,12 +1,9 @@
-package com.mycompany.myapp.domain;
+package com.mycompany.myapp.service.dto;
 
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
+import com.mycompany.myapp.domain.Address;
+import com.mycompany.myapp.domain.Review;
+import com.mycompany.myapp.domain.User;
 
-import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,36 +12,20 @@ import java.util.Set;
 /**
  * Created by ibara on 11/29/2016.
  */
-@Entity
-@Table(name = "company")
-public class Company {
+public class CompanyDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Address address;
 
-    @Column(name = "rating")
     private double rating;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "company_owners", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "company_id", referencedColumnName = "id")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private List<User> owners = new ArrayList<>();
 
     public Long getId() {
@@ -103,22 +84,20 @@ public class Company {
         this.owners = owners;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Company company = (Company) o;
-        return name.equals(company.name);
-    }
+    public CompanyDTO(){}
 
-    @Override
-    public int hashCode() {
-        return name.hashCode();
+    public CompanyDTO(String name, String description, Address address, double rating, Set<Review> reviews, List<User> owners) {
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.rating = rating;
+        this.reviews = reviews;
+        this.owners = owners;
     }
 
     @Override
     public String toString() {
-        return "Company{" +
+        return "CompanyDTO{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
