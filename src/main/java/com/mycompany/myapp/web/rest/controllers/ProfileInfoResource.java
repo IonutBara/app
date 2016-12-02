@@ -1,4 +1,4 @@
-package com.mycompany.myapp.web.rest;
+package com.mycompany.myapp.web.rest.controllers;
 
 import com.mycompany.myapp.config.DefaultProfileUtil;
 import com.mycompany.myapp.config.JHipsterProperties;

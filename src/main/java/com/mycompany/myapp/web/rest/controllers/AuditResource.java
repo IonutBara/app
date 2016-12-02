@@ -1,4 +1,4 @@
-package com.mycompany.myapp.web.rest;
+package com.mycompany.myapp.web.rest.controllers;
 
 import com.mycompany.myapp.service.AuditEventService;
 
