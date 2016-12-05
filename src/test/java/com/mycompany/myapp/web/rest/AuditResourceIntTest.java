@@ -5,6 +5,7 @@ import com.mycompany.myapp.config.audit.AuditEventConverter;
 import com.mycompany.myapp.domain.PersistentAuditEvent;
 import com.mycompany.myapp.repository.PersistenceAuditEventRepository;
 import com.mycompany.myapp.service.AuditEventService;
+import com.mycompany.myapp.web.rest.controllers.AuditResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Test class for the AuditResource REST controller.
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PlatformWebApp.class)
@@ -64,7 +64,7 @@ public class AuditResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         AuditEventService auditEventService =
-                new AuditEventService(auditEventRepository, auditEventConverter);
+            new AuditEventService(auditEventRepository, auditEventConverter);
         AuditResource auditResource = new AuditResource(auditEventService);
         this.restAuditMockMvc = MockMvcBuilders.standaloneSetup(auditResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -88,9 +88,9 @@ public class AuditResourceIntTest {
 
         // Get all the audits
         restAuditMockMvc.perform(get("/management/jhipster/audits"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
     }
 
     @Test
@@ -100,9 +100,9 @@ public class AuditResourceIntTest {
 
         // Get the audit
         restAuditMockMvc.perform(get("/management/jhipster/audits/{id}", auditEvent.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.principal").value(SAMPLE_PRINCIPAL));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.principal").value(SAMPLE_PRINCIPAL));
     }
 
     @Test
@@ -111,11 +111,11 @@ public class AuditResourceIntTest {
         auditEventRepository.save(auditEvent);
 
         // Generate dates for selecting audits by date, making sure the period will contain the audit
-        String fromDate  = SAMPLE_TIMESTAMP.minusDays(1).format(FORMATTER);
+        String fromDate = SAMPLE_TIMESTAMP.minusDays(1).format(FORMATTER);
         String toDate = SAMPLE_TIMESTAMP.plusDays(1).format(FORMATTER);
 
         // Get the audit
-        restAuditMockMvc.perform(get("/management/jhipster/audits?fromDate="+fromDate+"&toDate="+toDate))
+        restAuditMockMvc.perform(get("/management/jhipster/audits?fromDate=" + fromDate + "&toDate=" + toDate))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
@@ -127,7 +127,7 @@ public class AuditResourceIntTest {
         auditEventRepository.save(auditEvent);
 
         // Generate dates for selecting audits by date, making sure the period will not contain the sample audit
-        String fromDate  = SAMPLE_TIMESTAMP.minusDays(2).format(FORMATTER);
+        String fromDate = SAMPLE_TIMESTAMP.minusDays(2).format(FORMATTER);
         String toDate = SAMPLE_TIMESTAMP.minusDays(1).format(FORMATTER);
 
         // Query audits but expect no results
@@ -141,7 +141,7 @@ public class AuditResourceIntTest {
     public void getNonExistingAudit() throws Exception {
         // Get the audit
         restAuditMockMvc.perform(get("/management/jhipster/audits/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
 }

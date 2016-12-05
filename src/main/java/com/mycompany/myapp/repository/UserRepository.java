@@ -32,11 +32,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
         countQuery = "select count(user) from User user")
     Page<User> findAllWithAuthorities(Pageable pageable);
 
+    //@Query(value = "select user from User user WHERE user.login=?1")
+    @Query(value="from User as u where u.login = ?1")
+    User getUserByLogin(String login);
+
     @Override
     void delete(User t);
 
-    @Query(value = "select user from User user INNER JOIN user.country country WHERE country.name=?1")
-    List<User> findAllByCountry(String countryName);
+/*    @Query(value = "select user from User user INNER JOIN user.address address WHERE address.country.name=?1")
+    List<User> findAllByCountry(String countryName);*/
 
 /*  SELECT c
     FROM Customer c INNER JOIN c.orders o

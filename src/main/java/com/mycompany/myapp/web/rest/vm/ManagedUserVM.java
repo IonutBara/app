@@ -2,8 +2,10 @@ package com.mycompany.myapp.web.rest.vm;
 
 import java.time.ZonedDateTime;
 
+import java.util.List;
 import java.util.Set;
 
+import com.mycompany.myapp.domain.Address;
 import com.mycompany.myapp.domain.Country;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.service.dto.UserDTO;
@@ -45,9 +47,10 @@ public class ManagedUserVM extends UserDTO {
     }
 
     public ManagedUserVM(Long id, String login, String password, String firstName, String lastName,
-                         String email, boolean activated, String langKey, Set<String> authorities, Country country,
+                         String email, boolean activated, String langKey, Set<String> authorities, Address address, List<String> companies,
                          String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate) {
-        super(login, firstName, lastName, email, activated, langKey, authorities, country);
+        super(login, firstName, lastName, email, activated, langKey, authorities, companies);
+        //super(login, firstName, lastName, email, activated, langKey, authorities, address, companies);
         this.id = id;
         this.createdBy = createdBy;
         this.createdDate = createdDate;

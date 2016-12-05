@@ -1,5 +1,6 @@
 package com.mycompany.myapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "review")
-public class Review {
+public class Review implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,9 +28,9 @@ public class Review {
     @Column(name = "contra")
     private String contra;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Company.class)
-    @JoinColumn(name = "company_id")
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="company_id")
     private Company company;
 
     public Long getId() {
@@ -84,9 +85,9 @@ public class Review {
         Review review = (Review) o;
 
         if (!name.equals(review.name)) return false;
-        if (pros != null ? !pros.equals(review.pros) : review.pros != null) return false;
-        if (contra != null ? !contra.equals(review.contra) : review.contra != null) return false;
-        return company.equals(review.company);
+        if (description != null ? !description.equals(review.description) : review.description != null) return false;
+        if (!pros.equals(review.pros)) return false;
+        return contra.equals(review.contra);
 
     }
 
@@ -95,7 +96,6 @@ public class Review {
         int result = name.hashCode();
         result = 31 * result + (pros != null ? pros.hashCode() : 0);
         result = 31 * result + (contra != null ? contra.hashCode() : 0);
-        result = 31 * result + company.hashCode();
         return result;
     }
 
@@ -107,7 +107,7 @@ public class Review {
             ", description='" + description + '\'' +
             ", pros='" + pros + '\'' +
             ", contra='" + contra + '\'' +
-            ", company=" + company +
+            //", company=" + company +
             '}';
     }
 }

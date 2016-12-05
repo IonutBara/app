@@ -1,6 +1,7 @@
 package com.mycompany.myapp.service.mapper;
 
 import com.mycompany.myapp.domain.Authority;
+import com.mycompany.myapp.domain.Company;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.service.dto.UserDTO;
 import org.mapstruct.*;
@@ -42,7 +43,7 @@ public interface UserMapper {
         return user;
     }
 
-    default Set<String> stringsFromAuthorities (Set<Authority> authorities) {
+    default Set<String> stringsFromAuthorities(Set<Authority> authorities) {
         return authorities.stream().map(Authority::getName)
             .collect(Collectors.toSet());
     }
@@ -53,5 +54,18 @@ public interface UserMapper {
             auth.setName(string);
             return auth;
         }).collect(Collectors.toSet());
+    }
+
+    default List<String> stringFromCompanies(List<Company> companies) {
+        return companies.stream().map(Company::getName)
+            .collect(Collectors.toList());
+    }
+
+    default List<Company> companiesFromStrings(List<String> strings) {
+        return strings.stream().map(string -> {
+            Company company = new Company();
+            company.setName(string);
+            return company;
+        }).collect(Collectors.toList());
     }
 }

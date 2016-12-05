@@ -7,9 +7,8 @@ import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,10 +16,11 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "company")
-public class Company {
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Company implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -29,23 +29,20 @@ public class Company {
     @Column(name = "description")
     private String description;
 
-    @OneToOne
+/*    @ManyToOne
     @JoinColumn(name = "address_id")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Address address;
+    private Address address;*/
 
     @Column(name = "rating")
     private double rating;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(name = "company_owners", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "company_id", referencedColumnName = "id")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private List<User> owners = new ArrayList<>();
+    @ManyToMany(mappedBy = "companies")
+    private Set<User> users = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -71,13 +68,13 @@ public class Company {
         this.description = description;
     }
 
-    public Address getAddress() {
+/*    public Address getAddress() {
         return address;
     }
 
     public void setAddress(Address address) {
         this.address = address;
-    }
+    }*/
 
     public double getRating() {
         return rating;
@@ -95,18 +92,19 @@ public class Company {
         this.reviews = reviews;
     }
 
-    public List<User> getOwners() {
-        return owners;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setOwners(List<User> owners) {
-        this.owners = owners;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Company company = (Company) o;
         return name.equals(company.name);
     }
@@ -122,10 +120,9 @@ public class Company {
             "id=" + id +
             ", name='" + name + '\'' +
             ", description='" + description + '\'' +
-            ", address=" + address +
+            //", address=" + address +
             ", rating=" + rating +
             ", reviews=" + reviews +
-            ", owners=" + owners +
             '}';
     }
 }

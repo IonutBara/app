@@ -12,9 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.time.ZonedDateTime;
 
 /**
@@ -78,8 +76,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonIgnore
     @ManyToMany
-    @JoinTable(
-        name = "jhi_user_authority",
+    @JoinTable(name = "jhi_user_authority",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -90,10 +87,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Country.class)
-    @JoinColumn(name = "country_id")
+/*    @ManyToOne
+    @JoinColumn(name = "address_id")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Country country;
+    private Address address;
+*/
+    //@JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "company_owners",
+        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "company_id", referencedColumnName = "id")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private List<Company> companies = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -200,12 +205,20 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.persistentTokens = persistentTokens;
     }
 
-    public Country getCountry() {
-        return country;
+/*    public Address getAddress() {
+        return address;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+*/
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<Company> companies) {
+        this.companies = companies;
     }
 
     @Override
@@ -241,7 +254,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", activated='" + activated + '\'' +
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
-            ", country='" + country.getName() + '\'' +
+            // ", address='" + address + '\'' +
+            ", companies=" + companies +
             "}";
     }
 }

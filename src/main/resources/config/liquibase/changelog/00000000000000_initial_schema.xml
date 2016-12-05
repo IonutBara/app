@@ -280,6 +280,26 @@
                                  referencedTableName="review"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="dropForeignKeyFkOwnerId" author="Ionut">
+        <dropForeignKeyConstraint baseTableName="company" constraintName="fk_owner_id"/>
+        <dropColumn tableName="company" columnName="owner_id"/>
+    </changeSet>
+    <changeSet id="addNewColumnAddressIdInUserTable" author="Ionut">
+        <dropForeignKeyConstraint baseTableName="jhi_user" constraintName="fk_country_id"/>
+        <dropColumn tableName="jhi_user" columnName="country_id"/>
+        <addColumn tableName="jhi_user">
+            <column name="address_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="jhi_user"
+                                 baseColumnNames="address_id"
+                                 constraintName="fk_address_id"
+                                 referencedTableName="address"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="dropForeignKeyReviewId" author="Ionut">
+        <dropForeignKeyConstraint baseTableName="company" constraintName="fk_review_company_id"/>
+        <dropColumn tableName="company" columnName="review_id"/>
+    </changeSet>
 
 
 </databaseChangeLog>

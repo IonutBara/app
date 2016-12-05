@@ -2,13 +2,12 @@ package com.mycompany.myapp.service.dto;
 
 import com.mycompany.myapp.config.Constants;
 
-import com.mycompany.myapp.domain.Authority;
-import com.mycompany.myapp.domain.Country;
-import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.*;
 
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.*;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,9 @@ public class UserDTO {
 
     private Set<String> authorities;
 
-    private Country country;
+    private Address address;
+
+    private List<String> companies;
 
     public UserDTO() {
     }
@@ -47,11 +48,16 @@ public class UserDTO {
         this(user.getLogin(), user.getFirstName(), user.getLastName(),
             user.getEmail(), user.getActivated(), user.getLangKey(),
             user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet()), user.getCountry());
+                .collect(Collectors.toSet()),// user.getAddress()
+            user.getCompanies().stream().map(Company::getName).collect(Collectors.toList())
+            );
     }
 
     public UserDTO(String login, String firstName, String lastName,
-        String email, boolean activated, String langKey, Set<String> authorities, Country country) {
+                   String email, boolean activated, String langKey,
+                   Set<String> authorities , //Address address//,
+                   List<String> companies
+    ) {
 
         this.login = login;
         this.firstName = firstName;
@@ -60,8 +66,8 @@ public class UserDTO {
         this.activated = activated;
         this.langKey = langKey;
         this.authorities = authorities;
-        this.country = country;
-        this.country = country;
+        this.address = address;
+        this.companies = companies;
     }
 
     public String getLogin() {
@@ -92,8 +98,12 @@ public class UserDTO {
         return authorities;
     }
 
-    public Country getCountry() {
-        return country;
+    public Address getAddress() {
+        return address;
+    }
+
+    public List<String> getCompanies() {
+        return companies;
     }
 
     @Override
@@ -106,7 +116,8 @@ public class UserDTO {
             ", activated=" + activated +
             ", langKey='" + langKey + '\'' +
             ", authorities=" + authorities +
-            ", country=" + country.getName() +
+            //", address=" + address +
+            ", companies=" + companies +
             "}";
     }
 }
