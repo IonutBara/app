@@ -13,7 +13,7 @@ import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.CompanyService;
-import com.mycompany.myapp.service.UserUnauthorizedException;
+import com.mycompany.myapp.exceptions.UserUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

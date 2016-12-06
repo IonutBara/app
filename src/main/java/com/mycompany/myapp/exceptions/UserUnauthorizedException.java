@@ -1,4 +1,4 @@
-package com.mycompany.myapp.service;
+package com.mycompany.myapp.exceptions;
 
 /**
  * Created by ibara on 12/6/2016.
