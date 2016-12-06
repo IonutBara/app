@@ -41,7 +41,11 @@ public class Company implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany(mappedBy = "companies")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "company_owners",
+        joinColumns = {@JoinColumn(name = "company_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<User> users = new HashSet<>();
 
     public Long getId() {

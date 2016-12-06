@@ -47,7 +47,7 @@ public class ManagedUserVM extends UserDTO {
     }
 
     public ManagedUserVM(Long id, String login, String password, String firstName, String lastName,
-                         String email, boolean activated, String langKey, Set<String> authorities, Address address, List<String> companies,
+                         String email, boolean activated, String langKey, Set<String> authorities, Address address, Set<String> companies,
                          String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate) {
         super(login, firstName, lastName, email, activated, langKey, authorities, companies);
         //super(login, firstName, lastName, email, activated, langKey, authorities, address, companies);

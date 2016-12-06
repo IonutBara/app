@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -75,7 +76,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private ZonedDateTime resetDate = null;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "jhi_user_authority",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
@@ -92,13 +93,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Address address;
 */
-    //@JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "company_owners",
-        joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-        inverseJoinColumns = {@JoinColumn(name = "company_id", referencedColumnName = "id")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private List<Company> companies = new ArrayList<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private Set<Company> companies = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -213,11 +210,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.address = address;
     }
 */
-    public List<Company> getCompanies() {
+    public Set<Company> getCompanies() {
         return companies;
     }
 
-    public void setCompanies(List<Company> companies) {
+    public void setCompanies(Set<Company> companies) {
         this.companies = companies;
     }
 

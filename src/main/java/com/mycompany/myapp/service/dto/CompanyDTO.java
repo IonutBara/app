@@ -2,8 +2,6 @@ package com.mycompany.myapp.service.dto;
 
 import com.mycompany.myapp.domain.Address;
 import com.mycompany.myapp.domain.Review;
-
-import java.util.HashSet;
 import java.util.Set;
 
 /**

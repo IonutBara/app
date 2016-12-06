@@ -6,16 +6,14 @@ package com.mycompany.myapp.web.rest.controllers;
 
 import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.domain.Company;
-//import com.mycompany.myapp.domain.CompanyOwners;
-import com.mycompany.myapp.domain.CompanyOwners;
 import com.mycompany.myapp.domain.User;
-//import com.mycompany.myapp.repository.CompanyOwnersRepository;
-import com.mycompany.myapp.repository.CompanyOwnersRepository;
+import com.mycompany.myapp.exceptions.CompanyNotFoundException;
 import com.mycompany.myapp.repository.CompanyRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
-import com.mycompany.myapp.service.dto.CompanyDTO;
+import com.mycompany.myapp.service.CompanyService;
+import com.mycompany.myapp.service.UserUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,8 +22,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * REST controller for managing the company process.
@@ -44,7 +41,7 @@ public class CompanyResource {
     private UserRepository userRepository;
 
     @Inject
-    private CompanyOwnersRepository companyOwnersRepository;
+    private CompanyService companyService;
 
 
     /**
@@ -62,21 +59,45 @@ public class CompanyResource {
 
     @PostMapping("/companies")
     @Timed
-    public ResponseEntity<?> createCompany(@RequestBody String companyName) {
+    public ResponseEntity<?> createCompany(@RequestParam String companyName) {
         User userLogged = userRepository.getUserByLogin("ibara@lenovo.com");
-        List<User> owners = new ArrayList<>();
+        Set<User> owners = new HashSet<>();
+        log.debug("User userLogged => " + userLogged);
         owners.add(userLogged);
         Company newCompany = new Company();
         newCompany.setName(companyName);
         //newCompany.setDescription(company.getDescription());
         newCompany.setRating(0);
-        //newCompany.setOwners(owners);
+        newCompany.setUsers(owners);
         companyRepository.save(newCompany);
 
-        CompanyOwners companyOwners = new CompanyOwners();
-        companyOwners.setCompany(newCompany);
-        companyOwners.setUser(userLogged);
-        companyOwnersRepository.save(companyOwners);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/companies/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER})
+    public ResponseEntity<?> deleteCompany(@RequestParam Long id) throws CompanyNotFoundException, UserUnauthorizedException {
+        Company toDelete = companyRepository.findOne(id);
+        if (toDelete == null)
+            throw new CompanyNotFoundException("This Company doesn't exist in portal.");
+        User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
+        companyService.checkIfIsAuthorized(userLogged, toDelete);
+        companyRepository.delete(toDelete);
+        log.debug("Deleted Company: {}", toDelete);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/companies/{id}")
+    @Timed
+    @Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER})
+    public ResponseEntity<?> getCompany(@RequestParam Long id) throws CompanyNotFoundException, UserUnauthorizedException {
+        Company company = companyRepository.findOne(id);
+        if (company == null)
+            throw new CompanyNotFoundException("This Company doesn't exist in portal.");
+        User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
+        companyService.checkIfIsAuthorized(userLogged, company);
+        log.debug("Returned Company: {}", company);
+        return new ResponseEntity<>(company, HttpStatus.OK);
     }
 }

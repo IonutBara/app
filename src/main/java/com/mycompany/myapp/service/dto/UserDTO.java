@@ -39,7 +39,7 @@ public class UserDTO {
 
     private Address address;
 
-    private List<String> companies;
+    private Set<String> companies;
 
     public UserDTO() {
     }
@@ -48,15 +48,15 @@ public class UserDTO {
         this(user.getLogin(), user.getFirstName(), user.getLastName(),
             user.getEmail(), user.getActivated(), user.getLangKey(),
             user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet()),// user.getAddress()
-            user.getCompanies().stream().map(Company::getName).collect(Collectors.toList())
+                .collect(Collectors.toSet()),//, user.getAddress()
+            user.getCompanies().stream().map(Company::getName).collect(Collectors.toSet())
             );
     }
 
     public UserDTO(String login, String firstName, String lastName,
                    String email, boolean activated, String langKey,
-                   Set<String> authorities , //Address address//,
-                   List<String> companies
+                   Set<String> authorities,  //,Address address//,
+                   Set<String> companies
     ) {
 
         this.login = login;
@@ -102,7 +102,7 @@ public class UserDTO {
         return address;
     }
 
-    public List<String> getCompanies() {
+    public Set<String> getCompanies() {
         return companies;
     }
 

@@ -56,16 +56,16 @@ public interface UserMapper {
         }).collect(Collectors.toSet());
     }
 
-    default List<String> stringFromCompanies(List<Company> companies) {
+    default Set<String> stringFromCompanies(Set<Company> companies) {
         return companies.stream().map(Company::getName)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
-    default List<Company> companiesFromStrings(List<String> strings) {
+    default Set<Company> companiesFromStrings(Set<String> strings) {
         return strings.stream().map(string -> {
             Company company = new Company();
             company.setName(string);
             return company;
-        }).collect(Collectors.toList());
+        }).collect(Collectors.toSet());
     }
 }
