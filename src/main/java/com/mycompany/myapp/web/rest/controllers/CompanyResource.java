@@ -59,14 +59,14 @@ public class CompanyResource {
 
     @PostMapping("/companies")
     @Timed
-    public ResponseEntity<?> createCompany(@RequestParam String companyName) {
+    public ResponseEntity<?> createCompany(@RequestParam String companyName, String description) {
         User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
         Set<User> owners = new HashSet<>();
         log.debug("User userLogged {} ", userLogged);
         owners.add(userLogged);
         Company newCompany = new Company();
         newCompany.setName(companyName);
-        //newCompany.setDescription(company.getDescription());
+        newCompany.setDescription(description);
         newCompany.setRating(0);
         newCompany.setUsers(owners);
         companyRepository.save(newCompany);
