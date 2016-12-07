@@ -19,6 +19,8 @@ public class ReviewDTO {
 
     private Company company;
 
+    private Integer rating;
+
     public Long getId() {
         return id;
     }
@@ -67,12 +69,13 @@ public class ReviewDTO {
         this.company = company;
     }
 
-    public ReviewDTO(String name, String description, String pros, String contra, Company company) {
+    public ReviewDTO(String name, String description, String pros, String contra, Company company, Integer rating) {
         this.name = name;
         this.description = description;
         this.pros = pros;
         this.contra = contra;
         this.company = company;
+        this.rating = rating;
     }
 
     public ReviewDTO() {
@@ -87,6 +90,7 @@ public class ReviewDTO {
             ", pros='" + pros + '\'' +
             ", contra='" + contra + '\'' +
             ", company=" + company +
+            ", rating=" + rating +
             '}';
     }
 }

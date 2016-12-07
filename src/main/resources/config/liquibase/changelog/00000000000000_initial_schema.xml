@@ -300,6 +300,11 @@
         <dropForeignKeyConstraint baseTableName="company" constraintName="fk_review_company_id"/>
         <dropColumn tableName="company" columnName="review_id"/>
     </changeSet>
+    <changeSet id="addRatingColumnInReview" author="Ionut">
+        <addColumn tableName="review">
+            <column name="company_rating" type="int"/>
+        </addColumn>
+    </changeSet>
 
 
 </databaseChangeLog>

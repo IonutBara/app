@@ -28,9 +28,12 @@ public class Review implements java.io.Serializable {
     @Column(name = "contra")
     private String contra;
 
+    @Column(name = "company_rating")
+    private Integer rating;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="company_id")
+    @JoinColumn(name = "company_id")
     private Company company;
 
     public Long getId() {
@@ -77,6 +80,14 @@ public class Review implements java.io.Serializable {
         this.company = company;
     }
 
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +118,7 @@ public class Review implements java.io.Serializable {
             ", description='" + description + '\'' +
             ", pros='" + pros + '\'' +
             ", contra='" + contra + '\'' +
+            ", rating=" + rating +
             //", company=" + company +
             '}';
     }
