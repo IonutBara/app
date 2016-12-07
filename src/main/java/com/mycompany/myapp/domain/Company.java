@@ -48,6 +48,9 @@ public class Company implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<User> users = new HashSet<>();
 
+/*    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    private Set<Job> jobs = new HashSet<>();*/
+
     public Long getId() {
         return id;
     }
@@ -104,6 +107,14 @@ public class Company implements Serializable {
         this.users = users;
     }
 
+/*    public Set<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(Set<Job> jobs) {
+        this.jobs = jobs;
+    }*/
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,6 +138,7 @@ public class Company implements Serializable {
             //", address=" + address +
             ", rating=" + rating +
             ", reviews=" + reviews +
+            //", jobs=" + jobs +
             '}';
     }
 }
