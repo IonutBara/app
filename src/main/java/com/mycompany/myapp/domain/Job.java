@@ -17,7 +17,7 @@ public class Job implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "job_description")
+    @Column(name = "description")
     private String description;
 
     @Column(name = "responsibilities")
