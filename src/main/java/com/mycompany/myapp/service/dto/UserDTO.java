@@ -41,6 +41,8 @@ public class UserDTO {
 
     private Set<String> companies;
 
+    private String savedJobs;
+
     public UserDTO() {
     }
 
@@ -49,14 +51,15 @@ public class UserDTO {
             user.getEmail(), user.getActivated(), user.getLangKey(),
             user.getAuthorities().stream().map(Authority::getName)
                 .collect(Collectors.toSet()),//, user.getAddress()
-            user.getCompanies().stream().map(Company::getName).collect(Collectors.toSet())
+            user.getCompanies().stream().map(Company::getName)
+                .collect(Collectors.toSet()), user.getSavedJobs()
             );
     }
 
     public UserDTO(String login, String firstName, String lastName,
                    String email, boolean activated, String langKey,
                    Set<String> authorities,  //,Address address//,
-                   Set<String> companies
+                   Set<String> companies, String savedJobs
     ) {
 
         this.login = login;
@@ -68,6 +71,7 @@ public class UserDTO {
         this.authorities = authorities;
         this.address = address;
         this.companies = companies;
+        this.savedJobs = savedJobs;
     }
 
     public String getLogin() {
@@ -106,6 +110,10 @@ public class UserDTO {
         return companies;
     }
 
+    public String getSavedJobs() {
+        return savedJobs;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -118,6 +126,7 @@ public class UserDTO {
             ", authorities=" + authorities +
             //", address=" + address +
             ", companies=" + companies +
+            ", savedJobs=" + savedJobs +
             "}";
     }
 }

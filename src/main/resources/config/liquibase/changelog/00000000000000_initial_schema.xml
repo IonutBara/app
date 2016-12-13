@@ -333,6 +333,11 @@
                                  referencedTableName="company"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="addListJobsSavedReference" author="Ionut">
+        <addColumn tableName="jhi_user">
+            <column name="saved_jobs" type="varchar(512)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

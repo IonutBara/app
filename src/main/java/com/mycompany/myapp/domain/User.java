@@ -88,14 +88,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
 
-/*    @ManyToOne
-    @JoinColumn(name = "address_id")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Address address;
-*/
+    /*    @ManyToOne
+        @JoinColumn(name = "address_id")
+        @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+        private Address address;
+    */
     @JsonIgnore
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private Set<Company> companies = new HashSet<>();
+
+    @Column(name = "saved_jobs")
+    private String savedJobs;
 
     public Long getId() {
         return id;
@@ -202,20 +205,28 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.persistentTokens = persistentTokens;
     }
 
-/*    public Address getAddress() {
-        return address;
-    }
+    /*    public Address getAddress() {
+            return address;
+        }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-*/
+        public void setAddress(Address address) {
+            this.address = address;
+        }
+    */
     public Set<Company> getCompanies() {
         return companies;
     }
 
     public void setCompanies(Set<Company> companies) {
         this.companies = companies;
+    }
+
+    public String getSavedJobs() {
+        return savedJobs;
+    }
+
+    public void setSavedJobs(String savedJobs) {
+        this.savedJobs = savedJobs;
     }
 
     @Override
@@ -253,6 +264,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", activationKey='" + activationKey + '\'' +
             // ", address='" + address + '\'' +
             ", companies=" + companies +
+            ", savedJobs=" + savedJobs +
             "}";
     }
 }

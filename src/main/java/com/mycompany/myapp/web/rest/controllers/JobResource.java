@@ -110,4 +110,29 @@ public class JobResource {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * PUT  /jobs/save/{id}  : save a new job for a specific user
+     *
+     * @param id the id of the job
+     */
+    @PutMapping("/jobs/save/{id}")
+    @Timed
+    public ResponseEntity<?> saveJob(@RequestParam Long id) {
+        User user = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
+        jobService.saveJob(id, user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * PUT  /jobs/unsave/{id}  : unsave a job for a specific user
+     *
+     * @param id the id of the job
+     */
+    @PutMapping("/jobs/unsave/{id}")
+    @Timed
+    public ResponseEntity<?> unsaveJob(@RequestParam Long id) {
+        User user = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
+        jobService.unsaveJob(id, user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }
