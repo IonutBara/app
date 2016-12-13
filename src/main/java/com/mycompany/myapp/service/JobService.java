@@ -11,8 +11,11 @@ import com.mycompany.myapp.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -74,10 +77,53 @@ public class JobService {
         String[] jobsAsArray = savedJobs.split(",");
         for (int i = 0; i < jobsAsArray.length; i++) {
             if (!jobsAsArray[i].equalsIgnoreCase("" + jobId)) {
-                sb.append(jobsAsArray[i]);
+                sb.append(jobsAsArray[i]).append(",");
             }
         }
-        user.setSavedJobs(sb.toString());
+        if (sb.length() > 0) {
+            user.setSavedJobs(sb.toString().substring(0, sb.length() - 1));
+        } else {
+            user.setSavedJobs("");
+        }
         userRepository.save(user);
+    }
+
+    public List<Job> listSavedJobs(User user) {
+        List<Job> jobs = new ArrayList<>();
+        if (user.getSavedJobs() != null ||
+            !user.getSavedJobs().equalsIgnoreCase("")) {
+            String[] allJobsAsArray = user.getSavedJobs().split(",");
+            for (int i = 0; i < allJobsAsArray.length; i++) {
+                try {
+                    Job job = jobRepository.findOne(Long.parseLong(allJobsAsArray[i]));
+                    if (job != null) {
+                        jobs.add(job);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return jobs;
+    }
+
+    @Transactional
+    public void updateListSavedJobs(User user) {
+        StringBuilder sb = new StringBuilder("");
+        List<Job> allJobs = listSavedJobs(user);
+        if (allJobs.isEmpty()) {
+            return;
+        }
+        for (Job job : allJobs) {
+            Job jobFromDb = jobRepository.findOne(job.getId());
+            if (jobFromDb != null) {
+                sb.append(job.getId()).append(",");
+            }
+        }
+        if (sb.length() > 0) {
+            user.setSavedJobs(sb.toString().substring(0, sb.length() - 1));
+        } else {
+            user.setSavedJobs("");
+        }
     }
 }

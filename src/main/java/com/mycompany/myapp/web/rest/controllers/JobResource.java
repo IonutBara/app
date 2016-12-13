@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest.controllers;
 
 import com.codahale.metrics.annotation.Timed;
+import com.mycompany.myapp.config.JHipsterProperties;
 import com.mycompany.myapp.domain.Company;
 import com.mycompany.myapp.domain.Job;
 import com.mycompany.myapp.domain.User;
@@ -134,5 +135,15 @@ public class JobResource {
         User user = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
         jobService.unsaveJob(id, user);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /jobs/save  : list all saved jobs to a specific user
+     */
+    @GetMapping("/jobs/save")
+    @Timed
+    public ResponseEntity<?> listSavedJobs() {
+        User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
+        return new ResponseEntity<>(jobService.listSavedJobs(userLogged), HttpStatus.OK);
     }
 }
