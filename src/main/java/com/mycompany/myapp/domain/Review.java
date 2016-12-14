@@ -1,9 +1,9 @@
 package com.mycompany.myapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by ibara on 11/29/2016.
@@ -35,6 +35,10 @@ public class Review implements java.io.Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @NotNull
+    @Column(name="is_approved")
+    private boolean isApproved = false;
 
     public Long getId() {
         return id;
@@ -88,6 +92,14 @@ public class Review implements java.io.Serializable {
         this.rating = rating;
     }
 
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,8 +130,9 @@ public class Review implements java.io.Serializable {
             ", description='" + description + '\'' +
             ", pros='" + pros + '\'' +
             ", contra='" + contra + '\'' +
-            ", rating=" + rating +
+            ", rating=" + rating + '\'' +
             //", company=" + company +
+            ", isApproved=" + isApproved +
             '}';
     }
 }

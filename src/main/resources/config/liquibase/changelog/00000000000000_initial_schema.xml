@@ -338,6 +338,13 @@
             <column name="saved_jobs" type="varchar(512)"/>
         </addColumn>
     </changeSet>
+    <changeSet id="add" author="addColumnIsApprovedForReview">
+        <addColumn tableName="review">
+            <column name="is_approved" type="boolean" valueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 
