@@ -32,7 +32,7 @@ public class Review implements java.io.Serializable {
     private Integer rating;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     private Company company;
 

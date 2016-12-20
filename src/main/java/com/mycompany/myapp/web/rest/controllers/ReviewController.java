@@ -14,6 +14,7 @@ import com.mycompany.myapp.repository.CompanyRepository;
 import com.mycompany.myapp.repository.ReviewRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.service.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,9 @@ public class ReviewController {
 
     @Inject
     private CompanyRepository companyRepository;
+
+    @Inject
+    private ReviewService reviewService;
 
     @GetMapping("/reviews")
     @Timed
@@ -99,6 +103,7 @@ public class ReviewController {
             throw new ReviewNotFoundException("The review doesn't exist.");
         reviewToApprove.setApproved(true);
         reviewRepository.save(reviewToApprove);
+        reviewService.updateRating(reviewToApprove);
         return new ResponseEntity<>(reviewToApprove, HttpStatus.OK);
     }
 
