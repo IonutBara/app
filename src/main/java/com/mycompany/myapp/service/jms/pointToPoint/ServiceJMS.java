@@ -20,19 +20,14 @@ public class ServiceJMS {
 
     @Inject
     private ActiveMQConnectionFactory connectionFactory;
-    @Inject
-    private Connection connection;
-    @Inject
-    private Session session;
-    @Inject
-    private Queue destination;
 
     public Session initJmsTemplate() {
+        Session session = null;
         try {
             //create ConnectionFactory
             connectionFactory = new ActiveMQConnectionFactory(brokerURL);
             //create a Connection
-            connection = connectionFactory.createConnection();
+            Connection connection = connectionFactory.createConnection();
             connection.start();
             //create a Session
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -49,7 +44,7 @@ public class ServiceJMS {
             logger.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
-        destination = session.createQueue(queue);
+        Queue destination = session.createQueue(queue);
         MessageProducer producer = session.createProducer(destination);
         //producer.setDeliveryDelay(DeliveryMode.NON_PERSISTENT);
         logger.debug(text);
@@ -62,7 +57,7 @@ public class ServiceJMS {
             logger.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
-        destination = session.createQueue(queue);
+        Queue destination = session.createQueue(queue);
         MessageConsumer consumer = session.createConsumer(destination);
         //wait for a message
         Message message = consumer.receive(1000);
@@ -84,7 +79,7 @@ public class ServiceJMS {
     }
 
     public void close() {
-        if (session != null) {
+/*        if (session != null) {
             try {
                 session.close();
             } catch (Exception e) {
@@ -101,7 +96,7 @@ public class ServiceJMS {
                 logger.warn("With message: {} {}", e.getMessage());
                 e.printStackTrace();
             }
-        }
+        }*/
 
     }
 }

@@ -20,21 +20,16 @@ public class ServiceJmsPubSub {
 
     @Inject
     private TopicConnectionFactory connectionFactory;
-    @Inject
-    private TopicConnection connection;
-    @Inject
-    private TopicSession session;
-    @Inject
-    private Topic topic;
 
     public TopicSession initJmsTemplatePubSub() {
+        TopicSession session = null;
         try {
             connectionFactory = new ActiveMQConnectionFactory(brokerURL);
-            connection = connectionFactory.createTopicConnection();
+            TopicConnection connection = connectionFactory.createTopicConnection();
             connection.setClientID("JMSTOPIC");
             connection.start();
             session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            topic = session.createTopic(topicName);
+            //Topic topic = session.createTopic(topicName);
         } catch (JMSException e) {
             logger.error("Exception while init JMS template in class:: {}", e.getClass());
             logger.warn("With message: {} {}", e.getMessage());
@@ -48,13 +43,14 @@ public class ServiceJmsPubSub {
             logger.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
+        Topic topic = session.createTopic(topicName);
         TopicPublisher producer = session.createPublisher(topic);
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
-        while (connection != null) {
+        while (session != null) {
             TextMessage message = session.createTextMessage(Thread.currentThread().getName()
                 + " : " + System.currentTimeMillis());
             producer.publish(message);
-            logger.debug("Message: {} sent!\n", message.getText());
+            logger.debug("Message: {} sent!", message.getText());
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -68,6 +64,7 @@ public class ServiceJmsPubSub {
             logger.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
+        Topic topic = session.createTopic(topicName);
         // set an asynchronous message listener
         TopicSubscriber receiver = session.createSubscriber(topic);
         SubscriberListener listener = new SubscriberListener();
@@ -76,7 +73,7 @@ public class ServiceJmsPubSub {
     }
 
     public void close() {
-        if (session != null) {
+/*        if (session != null) {
             try {
                 session.close();
             } catch (JMSException e) {
@@ -91,7 +88,7 @@ public class ServiceJmsPubSub {
                 logger.error("Exception while close JMS Connection in class:: {}", e.getClass());
                 logger.warn("With message: {} {}", e.getMessage());
             }
-        }
+        }*/
     }
 
 }
