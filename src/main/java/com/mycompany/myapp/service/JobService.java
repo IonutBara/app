@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -89,26 +90,31 @@ public class JobService {
     }
 
     public List<Job> listSavedJobs(User user) {
+        if (user == null) {
+            logger.error("User logged should not be null");
+            throw new NullPointerException("User logged should not be null");
+        }
         List<Job> jobs = new ArrayList<>();
-        if (user.getSavedJobs() != null ||
-            !user.getSavedJobs().equalsIgnoreCase("")) {
-            String[] allJobsAsArray = user.getSavedJobs().split(",");
-            for (int i = 0; i < allJobsAsArray.length; i++) {
-                try {
-                    Job job = jobRepository.findOne(Long.parseLong(allJobsAsArray[i]));
-                    if (job != null) {
-                        jobs.add(job);
-                    }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+        if (user.getSavedJobs() == null) {
+            logger.debug("This user does't have any saved jobs");
+            return Collections.emptyList();
+        }
+        String[] allJobsAsArray = user.getSavedJobs().split(",");
+        for (int i = 0; i < allJobsAsArray.length; i++) {
+            try {
+                Job job = jobRepository.findOne(Long.parseLong(allJobsAsArray[i]));
+                if (job != null) {
+                    jobs.add(job);
                 }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
         return jobs;
     }
 
     @Transactional
-    public void updateListSavedJobs(User user) {
+    void updateListSavedJobs(User user) {
         StringBuilder sb = new StringBuilder("");
         List<Job> allJobs = listSavedJobs(user);
         if (allJobs.isEmpty()) {
