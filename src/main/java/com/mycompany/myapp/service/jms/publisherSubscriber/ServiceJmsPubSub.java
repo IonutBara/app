@@ -3,9 +3,9 @@ package com.mycompany.myapp.service.jms.publisherSubscriber;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.jms.*;
 
 /**
@@ -14,12 +14,19 @@ import javax.jms.*;
 @Service
 public class ServiceJmsPubSub {
 
-    static final public String brokerURL = "tcp://IBARA-PC0G84LL:61616";
-    static final public String topicName = "TestTopic";
+    static final private String brokerURL = "tcp://IBARA-PC0G84LL:61616";
+    static final private String topicName = "TestTopic";
     private final Logger logger = LoggerFactory.getLogger(ServiceJmsPubSub.class);
 
-    @Inject
     private TopicConnectionFactory connectionFactory;
+
+    @Autowired
+    public ServiceJmsPubSub(TopicConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    public ServiceJmsPubSub() {
+    }
 
     public TopicSession initJmsTemplatePubSub() {
         TopicSession session = null;
@@ -30,7 +37,7 @@ public class ServiceJmsPubSub {
             connection.start();
             session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             //Topic topic = session.createTopic(topicName);
-        } catch (JMSException e) {
+        } catch (JMSException | JMSRuntimeException e) {
             logger.error("Exception while init JMS template in class:: {}", e.getClass());
             logger.warn("With message: {} {}", e.getMessage());
         }

@@ -31,7 +31,7 @@ public class JMSmainClass {
         }
     }*/
 
-    public static void main(String[] args) throws JMSException, InterruptedException {
+/*    public static void main(String[] args) throws JMSException, InterruptedException {
         //Topic test
         ServiceJmsPubSub serviceJmsPubSub = new ServiceJmsPubSub();
         try {
@@ -48,5 +48,5 @@ public class JMSmainClass {
         } finally {
             serviceJmsPubSub.close();
         }
-    }
+    }*/
 }

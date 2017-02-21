@@ -3,9 +3,9 @@ package com.mycompany.myapp.service.jms.pointToPoint;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.jms.*;
 
 /**
@@ -14,12 +14,18 @@ import javax.jms.*;
 @Service
 public class ServiceJMS {
 
-    static final public String brokerURL = "tcp://IBARA-PC0G84LL:61616";
-    static final public String queue = "TestQueue";
+    static final private String brokerURL = "tcp://IBARA-PC0G84LL:61616";
+    static final private String queue = "TestQueue";
     private final Logger logger = LoggerFactory.getLogger(ServiceJMS.class);
 
-    @Inject
     private ActiveMQConnectionFactory connectionFactory;
+
+    @Autowired
+    public ServiceJMS(ActiveMQConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    public ServiceJMS(){}
 
     public Session initJmsTemplate() {
         Session session = null;
@@ -31,7 +37,7 @@ public class ServiceJMS {
             connection.start();
             //create a Session
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        } catch (JMSException jms) {
+        } catch (JMSException | JMSRuntimeException jms) {
             logger.error("Exception while initialize session in class {}", jms.getClass());
             logger.error("with Message: {}", jms.getMessage());
             jms.printStackTrace();
@@ -71,7 +77,7 @@ public class ServiceJMS {
         }
         try {
             consumer.close();
-        } catch (JMSException e) {
+        } catch (JMSException | JMSRuntimeException e) {
             logger.error("Exception while close MessageConsumer in class:: {}", e.getClass());
             logger.warn("With message: {} {}", e.getMessage());
             e.printStackTrace();
