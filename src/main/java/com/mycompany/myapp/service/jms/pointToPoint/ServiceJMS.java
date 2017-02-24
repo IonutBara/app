@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.jms.pointToPoint;
 
+import com.mycompany.myapp.service.jms.JmsServiceInterface;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import javax.jms.*;
  * Created by ibara on 2/3/2017.
  */
 @Service
-public class ServiceJMS {
+public class ServiceJMS  implements JmsServiceInterface {
 
     static final private String brokerURL = "tcp://IBARA-PC0G84LL:61616";
     static final private String queue = "TestQueue";
@@ -27,6 +28,7 @@ public class ServiceJMS {
 
     public ServiceJMS(){}
 
+    @Override
     public Session initJmsTemplate() {
         Session session = null;
         try {
@@ -45,6 +47,7 @@ public class ServiceJMS {
         return session;
     }
 
+    @Override
     public void sendMessage(Session session, String text) throws JMSException {
         if (session == null) {
             logger.error("Session should not be null");
@@ -58,6 +61,7 @@ public class ServiceJMS {
         producer.send(message);
     }
 
+    @Override
     public void receiveMsgSynchronously(Session session) throws JMSException {
         if (session == null) {
             logger.error("Session should not be null");

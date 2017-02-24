@@ -35,7 +35,7 @@ public class JMSmainClass {
         //Topic test
         ServiceJmsPubSub serviceJmsPubSub = new ServiceJmsPubSub();
         try {
-            TopicSession session = serviceJmsPubSub.initJmsTemplatePubSub();
+            TopicSession session = serviceJmsPubSub.initJmsTemplate();
             serviceJmsPubSub.subscribe(session);
             serviceJmsPubSub.publish(session);
         } catch (JMSException e) {
