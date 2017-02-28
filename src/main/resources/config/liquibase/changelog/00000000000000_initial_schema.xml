@@ -347,12 +347,20 @@
     </changeSet>
     <changeSet id="createTableLogs" author="Ionut">
         <createTable tableName="logs">
-            <column name="user_id" type="varchar(32)" />
+            <column name="user_id" type="varchar(32)"/>
             <column name="dated" type="date"/>
             <column name="logger" type="varchar(64)"/>
             <column name="level" type="varchar(16)"/>
             <column name="message" type="varchar(256)"/>
         </createTable>
+    </changeSet>
+    <changeSet id="dropColumnDated" author="Ionut">
+        <dropColumn tableName="logs" columnName="dated"/>
+        <addColumn tableName="logs">
+            <column name="date" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

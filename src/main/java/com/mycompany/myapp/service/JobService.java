@@ -10,8 +10,12 @@ import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -23,15 +27,23 @@ import java.util.Set;
  * Created by ibara on 12/12/2016.
  */
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class JobService {
 
     private final Logger logger = LoggerFactory.getLogger(JobService.class);
 
-    @Inject
     private JobRepository jobRepository;
+    private UserRepository userRepository;
 
     @Inject
-    private UserRepository userRepository;
+    public void setJobRepository(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+
+    @Inject
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public boolean checkIfIsAuthorized(User userLogged, Job job) throws UserUnauthorizedException {
         Set<Authority> authorities = userLogged.getAuthorities();
