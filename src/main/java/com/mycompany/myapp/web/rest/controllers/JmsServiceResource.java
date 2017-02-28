@@ -8,6 +8,7 @@ import com.mycompany.myapp.service.util.DateTimeProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ import javax.jms.Session;
 /**
  * Created by ibara on 2/17/2017.
  */
-@Scope(value = "singleton")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @RestController
 @RequestMapping("/api")
 class JmsServiceResource {
