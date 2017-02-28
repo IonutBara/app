@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.jms.publisherSubscriber;
 
+import com.mycompany.myapp.service.jms.JmsQualifier;
 import com.mycompany.myapp.service.jms.JmsServiceInterface;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import javax.jms.*;
  * Created by ibara on 2/6/2017.
  */
 @Service
+@JmsQualifier(value = "serviceJmsPubSub")
 @Scope(value = "singleton")
 public class ServiceJmsPubSub implements JmsServiceInterface {
 

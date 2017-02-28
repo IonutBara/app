@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest.controllers;
 
 import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.service.dto.DateTimeDao;
+import com.mycompany.myapp.service.jms.JmsQualifier;
 import com.mycompany.myapp.service.jms.JmsServiceInterface;
 import com.mycompany.myapp.service.util.DateTimeProcessor;
 import org.slf4j.Logger;
@@ -24,12 +25,12 @@ import javax.jms.Session;
 @Scope(value = "singleton")
 @RestController
 @RequestMapping("/api")
-public class JmsServiceResource {
+class JmsServiceResource {
 
     private final Logger logger = LoggerFactory.getLogger(JmsServiceResource.class);
 
     @Inject
-    @Qualifier(value = "serviceJMS")
+    @JmsQualifier(value = "serviceJMS")
     private JmsServiceInterface jmsServiceInterface;
 
     private DateTimeProcessor dateTimeProcessor;

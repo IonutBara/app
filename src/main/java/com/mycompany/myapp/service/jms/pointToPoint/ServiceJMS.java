@@ -1,5 +1,6 @@
 package com.mycompany.myapp.service.jms.pointToPoint;
 
+import com.mycompany.myapp.service.jms.JmsQualifier;
 import com.mycompany.myapp.service.jms.JmsServiceInterface;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
@@ -13,7 +14,8 @@ import javax.jms.*;
  * Created by ibara on 2/3/2017.
  */
 @Service
-public class ServiceJMS  implements JmsServiceInterface {
+@JmsQualifier(value = "serviceJMS")
+class ServiceJMS implements JmsServiceInterface {
 
     static final private String brokerURL = "tcp://IBARA-PC0G84LL:61616";
     static final private String queue = "TestQueue";
@@ -26,7 +28,8 @@ public class ServiceJMS  implements JmsServiceInterface {
         this.connectionFactory = connectionFactory;
     }
 
-    public ServiceJMS(){}
+    public ServiceJMS() {
+    }
 
     @Override
     public Session initJmsTemplate() {
