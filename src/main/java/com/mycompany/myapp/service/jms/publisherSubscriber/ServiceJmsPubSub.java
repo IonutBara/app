@@ -19,10 +19,10 @@ import javax.jms.*;
 @Scope(value = "singleton")
 public class ServiceJmsPubSub implements JmsServiceInterface {
 
-    static final private String brokerURL = "tcp://IBARA-PC0G84LL:61616";
-    static final private String topicName = "TestTopic";
+    private static final String BROKER_URL = "tcp://IBARA-PC0G84LL:61616";
+    private static final String TOPIC_NAME = "TestTopic";
     private static final String CLIENT_ID = "JMSTOPIC_id";
-    private final Logger logger = LoggerFactory.getLogger(ServiceJmsPubSub.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ServiceJmsPubSub.class);
 
     private TopicConnectionFactory connectionFactory;
 
@@ -31,44 +31,43 @@ public class ServiceJmsPubSub implements JmsServiceInterface {
         this.connectionFactory = connectionFactory;
     }
 
-    public ServiceJmsPubSub() {
-    }
+    public ServiceJmsPubSub() {}
 
     @Override
     public TopicSession initJmsTemplate() {
         TopicSession session = null;
         try {
-            connectionFactory = new ActiveMQConnectionFactory(brokerURL);
+            connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
             TopicConnection connection = connectionFactory.createTopicConnection();
             connection.setClientID(CLIENT_ID);
             connection.start();
             session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            //Topic topic = session.createTopic(topicName);
+            //Topic topic = session.createTopic(TOPIC_NAME);
         } catch (JMSException | JMSRuntimeException e) {
-            logger.error("Exception while init JMS template in class:: {}", e.getClass());
-            logger.warn("With message: {} {}", e.getMessage());
+            LOGGER.error("Exception while init JMS template in class:: {}", e.getClass());
+            LOGGER.warn("With message: {} {}", e.getMessage());
         }
-        logger.debug("Starting connection successfully");
+        LOGGER.debug("Starting connection successfully");
         return session;
     }
 
     private void publish(TopicSession session) throws JMSException {
         if (session == null) {
-            logger.error("Session should not be null");
+            LOGGER.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
-        Topic topic = session.createTopic(topicName);
+        Topic topic = session.createTopic(TOPIC_NAME);
         TopicPublisher producer = session.createPublisher(topic);
         producer.setDeliveryMode(DeliveryMode.PERSISTENT);
         while (session != null) {
             TextMessage message = session.createTextMessage(Thread.currentThread().getName()
                 + " : " + System.currentTimeMillis());
             producer.publish(message);
-            logger.debug("Message: {} sent!", message.getText());
+            LOGGER.debug("Message: {} sent!", message.getText());
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                logger.error("Exception  while publish a message to a Topic in class: {}, with message: {}",
+                LOGGER.error("Exception  while publish a message to a Topic in class: {}, with message: {}",
                     e, getClass(), e.getMessage());
             }
         }
@@ -76,15 +75,15 @@ public class ServiceJmsPubSub implements JmsServiceInterface {
 
     private void subscribe(TopicSession session) throws JMSException, InterruptedException {
         if (session == null) {
-            logger.error("Session should not be null");
+            LOGGER.error("Session should not be null");
             throw new NullPointerException("Session should not be null");
         }
-        Topic topic = session.createTopic(topicName);
+        Topic topic = session.createTopic(TOPIC_NAME);
         // set an asynchronous message listener
         TopicSubscriber receiver = session.createSubscriber(topic);
         SubscriberListener listener = new SubscriberListener();
         receiver.setMessageListener(listener);
-        logger.debug("Subscriber is ready, waiting for messages...");
+        LOGGER.debug("Subscriber is ready, waiting for messages...");
     }
 
     @Override
@@ -93,16 +92,16 @@ public class ServiceJmsPubSub implements JmsServiceInterface {
             try {
                 session.close();
             } catch (JMSException e) {
-                logger.error("Exception while close JMS Session in class:: {}", e.getClass());
-                logger.warn("With message: {} {}", e.getMessage());
+                LOGGER.error("Exception while close JMS Session in class:: {}", e.getClass());
+                LOGGER.warn("With message: {} {}", e.getMessage());
             }
         }
         if (connection != null) {
             try {
                 connection.close();
             } catch (JMSException e) {
-                logger.error("Exception while close JMS Connection in class:: {}", e.getClass());
-                logger.warn("With message: {} {}", e.getMessage());
+                LOGGER.error("Exception while close JMS Connection in class:: {}", e.getClass());
+                LOGGER.warn("With message: {} {}", e.getMessage());
             }
         }*/
     }
@@ -118,7 +117,7 @@ public class ServiceJmsPubSub implements JmsServiceInterface {
         try {
             subscribe((TopicSession) session);
         } catch (InterruptedException e) {
-            logger.error("Exception  while subscribe to a Topic in class: {}, with message: {}",
+            LOGGER.error("Exception  while subscribe to a Topic in class: {}, with message: {}",
                 e, getClass(), e.getMessage());
         }
     }

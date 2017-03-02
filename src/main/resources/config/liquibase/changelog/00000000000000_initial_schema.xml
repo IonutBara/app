@@ -362,6 +362,13 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="addColumnIdLogs" author="Ionut">
+        <addColumn tableName="logs">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

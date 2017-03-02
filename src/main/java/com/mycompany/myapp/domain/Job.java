@@ -10,6 +10,8 @@ import java.io.Serializable;
 @Table(name = "job")
 public class Job implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
