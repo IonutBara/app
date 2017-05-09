@@ -112,9 +112,9 @@ public class JobService {
             return Collections.emptyList();
         }
         String[] allJobsAsArray = user.getSavedJobs().split(",");
-        for (int i = 0; i < allJobsAsArray.length; i++) {
+        for (String anAllJobsAsArray : allJobsAsArray) {
             try {
-                Job job = jobRepository.findOne(Long.parseLong(allJobsAsArray[i]));
+                Job job = jobRepository.findOne(Long.parseLong(anAllJobsAsArray));
                 if (job != null) {
                     jobs.add(job);
                 }

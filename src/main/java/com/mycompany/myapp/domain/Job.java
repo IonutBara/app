@@ -1,6 +1,10 @@
 package com.mycompany.myapp.domain;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -8,6 +12,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "job")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1L;

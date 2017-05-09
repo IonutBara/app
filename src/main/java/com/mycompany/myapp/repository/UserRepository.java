@@ -1,6 +1,5 @@
 package com.mycompany.myapp.repository;
 
-import com.mycompany.myapp.domain.Country;
 import com.mycompany.myapp.domain.User;
 
 import java.time.ZonedDateTime;

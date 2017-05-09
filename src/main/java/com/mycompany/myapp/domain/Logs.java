@@ -15,7 +15,7 @@ public class Logs implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "user_id")
     private String user_id;
@@ -31,6 +31,17 @@ public class Logs implements Serializable {
 
     @Column(name = "date")
     private ZonedDateTime date = null;
+
+    public Logs(String user_id, String logger, String level, String message) { //, ZonedDateTime date) {
+        this.user_id = user_id;
+        this.logger = logger;
+        this.level = level;
+        this.message = message;
+        //this.date = date;
+    }
+
+    public Logs() {
+    }
 
     public String getUser_id() {
         return user_id;
