@@ -75,8 +75,7 @@ public class TestSpringAop {
         LOGGER.error("Throwing exception : {}", ex);
     }*/
 
-    //@Pointcut("execution(* com.mycompany.myapp.web.rest.controllers.CompanyResource.listAll(..))")
-    @Pointcut("execution(* com.mycompany.myapp.repository.CompanyRepository.*(..))")
+    @Pointcut("execution(* com.mycompany.myapp.repository.CompanyRepository.findAll(..))")
     public void companyResourcePointcut() {
     }
 
@@ -87,7 +86,7 @@ public class TestSpringAop {
             @SuppressWarnings("unchecked")
             ArrayList<Company> lista = (ArrayList<Company>) proceedingJoinPoint.proceed();
             for (Company company : lista) {
-                LOGGER.debug("Company informations: {}", company.toString());
+                LOGGER.debug("Company information: {}", company.toString());
             }
             lista.forEach(s -> LOGGER.debug("value = {}", s.toString()));
             lista.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
@@ -95,5 +94,27 @@ public class TestSpringAop {
         } catch (Throwable throwable) {
             LOGGER.error("Throwable occurred while executing around advice example");
         }
+    }
+
+    @Pointcut("within(com.mycompany.myapp.web.rest.controllers.CompanyResource)")
+    public void companyPointcut() {}
+
+    @Pointcut("execution(* com.mycompany.myapp.web.rest.controllers.CompanyResource.createCompany(..))")
+    public void newCompanyCreated() {}
+
+    @Before("companyPointcut()")
+    public void companyResourceCalled(JoinPoint joinPoint) {
+        LOGGER.debug("The Company REST Controller has been called.");
+        LOGGER.debug("Method : {} will be executed!", joinPoint.getSignature().getName());
+    }
+
+    @AfterReturning("newCompanyCreated()")
+    public void newCompanyAdded(JoinPoint joinPoint) {
+        LOGGER.info("INFO : The COMPANY : {} was created", joinPoint.getArgs()[0]);
+    }
+
+    @AfterThrowing(pointcut = "companyPointcut()", throwing = "ex")
+    public void exceptionThrownInCompanies(Exception ex) {
+        LOGGER.error("EXCEPTION HAS BEEN THROWN : Stacktrace => {}", ex);
     }
 }

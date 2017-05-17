@@ -8,12 +8,12 @@ import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.domain.Company;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.exceptions.CompanyNotFoundException;
+import com.mycompany.myapp.exceptions.UserUnauthorizedException;
 import com.mycompany.myapp.repository.CompanyRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.CompanyService;
-import com.mycompany.myapp.exceptions.UserUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * REST controller for managing the company process.
@@ -31,23 +33,34 @@ import java.util.*;
 @RequestMapping("/api")
 public class CompanyResource {
 
-    private final Logger log = LoggerFactory.getLogger(CompanyResource.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(CompanyResource.class);
 
-
-    @Inject
     private CompanyRepository companyRepository;
 
-    @Inject
     private UserRepository userRepository;
 
-    @Inject
     private CompanyService companyService;
 
+    @Inject
+    public void setCompanyRepository(CompanyRepository companyRepository) {
+        this.companyRepository = companyRepository;
+    }
+
+    @Inject
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Inject
+    public void setCompanyService(CompanyService companyService) {
+        this.companyService = companyService;
+    }
 
     /**
      * GET  /companies : list all existent companies.
      *
-     * @return the ResponseEntity with status 200 (OK) and all companies in body, or status 500 (Internal Server Error) if the list couldn't be returned
+     * @return the ResponseEntity with status 200 (OK) and all companies in body,
+     * or status 500 (Internal Server Error) if the list couldn't be returned
      */
     @GetMapping("/companies")
     @Timed
@@ -62,7 +75,7 @@ public class CompanyResource {
     public ResponseEntity<?> createCompany(@RequestParam String companyName, String description) {
         User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
         Set<User> owners = new HashSet<>();
-        log.debug("User userLogged {} ", userLogged);
+        LOGGER.debug("User userLogged {} ", userLogged);
         owners.add(userLogged);
         Company newCompany = new Company();
         newCompany.setName(companyName);
@@ -84,7 +97,7 @@ public class CompanyResource {
         User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
         companyService.checkIfIsAuthorized(userLogged, toDelete);
         companyRepository.delete(toDelete);
-        log.debug("Deleted Company: {}", toDelete);
+        LOGGER.debug("Deleted Company: {}", toDelete);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -97,7 +110,7 @@ public class CompanyResource {
             throw new CompanyNotFoundException("This Company doesn't exist in portal.");
         User userLogged = userRepository.getUserByLogin(SecurityUtils.getCurrentUserLogin());
         companyService.checkIfIsAuthorized(userLogged, company);
-        log.debug("Returned Company: {}", company);
+        LOGGER.debug("Returned Company: {}", company);
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 }
