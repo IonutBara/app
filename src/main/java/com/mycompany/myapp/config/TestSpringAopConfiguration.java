@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 public class TestSpringAopConfiguration {
 
     @Bean
-    @Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
+    @Profile({Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_PRODUCTION})
     public TestSpringAop altAspect() {
         return new TestSpringAop();
     }
